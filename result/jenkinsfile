@@ -1,0 +1,38 @@
+pipeline {
+    agent any
+
+    tools{
+        nodejs 'nodejs 14.19.1'
+    }
+
+    stages{
+        stage("build"){
+            when{
+                changeset "**/result/**"
+            }
+            steps{
+                echo 'Compiling result app'
+                dir('result'){
+                    npm install
+                }
+            }
+        }
+    
+        stage("test"){
+            when{
+                changeset "**/result/**"
+            }
+            steps{
+                echo 'Running Unit Tets on result app'
+                dir('result'){
+                    npm install
+                    npm test
+                }
+            }
+        }
+    }
+    post{
+        always{
+            echo 'Building pipeline for result is completed..'}
+        }
+}
